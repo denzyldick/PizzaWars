@@ -1,0 +1,8 @@
+#BlueJ class context
+comment0.params=
+comment0.target=void\ act()
+comment1.params=owner\ direction
+comment1.target=PizzaSlice(PizzaBoy,\ java.lang.String)
+comment2.params=
+comment2.target=void\ touchedBorder()
+numComments=3
