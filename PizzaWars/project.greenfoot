@@ -1,5 +1,5 @@
 #Greenfoot properties
-#Sat Apr 12 20:06:21 CEST 2014
+#Sat Apr 12 22:05:48 CEST 2014
 target4.type=ClassTarget
 dependency3.from=Menu
 target6.editor.width=900
@@ -7,6 +7,7 @@ target3.height=50
 target5.height=50
 dependency3.type=UsesDependency
 target4.name=PizzaBoy
+class.Heart.image=heart.png
 class.PlayArea.superclass=greenfoot.World
 target1.height=50
 target5.type=ClassTarget
@@ -52,6 +53,7 @@ target7.y=70
 target7.x=170
 target7.name=Platform
 target6.y=190
+class.Heart.superclass=greenfoot.Actor
 target6.x=10
 class.Platform.image=platform.png
 target2.editor.y=242

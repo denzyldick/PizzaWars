@@ -17,21 +17,29 @@ public class PizzaBoy extends Actor
     World world;
     private final int SPEED = 2;
     private final int FALLING_SPEED = 5;
-    private final int JUMPLIMIT = 10;
+    private final int JUMP_LIMIT = 60;
     private int frame = 0;
+    
     private GreenfootImage[] pizzaboy = new GreenfootImage[8];
+
+
     private int FRAME_LIMIT = 8;
     private boolean isFlipped = true;
     private boolean falling   = true;
     private String facing  = "right";
     private String[] keys  = new String[4];
+    private int levens = 5;
+    private int animationCount = 0;
+    private int jumpTimer = 0;
+    
     public PizzaBoy(boolean type,String left,String right,String jump,String shoot)
     {
         keys[0] = left;
-        keys[1]  =  right;
+        keys[1] = right;
         keys[2] = jump;
         keys[3] = shoot;
         world = (PlayArea)getWorld();
+       
         if(type)
         {
             pizzaboy[0]  = new GreenfootImage("red/playerIdle0.png");
@@ -53,28 +61,36 @@ public class PizzaBoy extends Actor
             pizzaboy[6]  = new GreenfootImage("green/playerWalking5.png");
             pizzaboy[7]  = new GreenfootImage("green/playerJumping.png");
         }
+      
+       
         setImage(pizzaboy[0]);
-     
+       
     }
+   
     public void act() 
     {
         this.collisionDetection();  
         this.keyControl();
         if(this.falling) this.fall();
+        animationCount++;
           
     }    
     private void moveRight()
-    {if(!falling)
+    {
+        if(!falling)
         {
        this.setLocation((this.getX() + this.SPEED),this.getY());
-    }this.animateRight();
-       facing = "right";
-    }
+        }
+    if(animationCount % 4 == 0)
+    {
+    this.animateRight();
+    facing = "right";
+    }}
     private void animateRight()
     {
        if(frame < this.FRAME_LIMIT)
        {
-          
+     
         setImage(pizzaboy[frame]);
         frame++;
     }else
@@ -91,17 +107,19 @@ public class PizzaBoy extends Actor
       
         
     }
-    facing =  "left";
-      this.animateLeft();
-    }
+    if(animationCount  % 4 == 0)
+    {
+        facing =  "left";
+        this.animateLeft();
+    }}
     
-       private void animateLeft()
+     private void animateLeft()
     {
         if(frame < this.FRAME_LIMIT)
         {
             GreenfootImage flipped = pizzaboy[frame];
-            flipped.mirrorHorizontally();/// flip image
-            setImage(flipped);
+           flipped.mirrorHorizontally();/// flip image
+       
             
             frame++;
             
@@ -113,16 +131,22 @@ public class PizzaBoy extends Actor
        
     }
     private void jump()
-    {
+    {this.setLocation(this.getX(),(this.getY() - 1));
+                this.animateJump();
         if(!this.falling)
         {
-            for(int i = 0; i < JUMPLIMIT; i++)
-            {
-                this.setLocation(this.getX(),(this.getY() - i));
+           if(true)
+           {
+                this.setLocation(this.getX(),(this.getY() - 1));
                 this.animateJump();
-            }
+         
+            }else
+            {
             this.falling  = true;
         }
+             jumpTimer++;
+        }
+              
     }
     
     private void animateJump()
@@ -143,7 +167,7 @@ public class PizzaBoy extends Actor
                     GreenfootImage  pizzaboyimage    = platform.getImage();
                     setLocation(this.getX(),(platform.getY()-platformimage.getHeight()));
                     this.falling = false;
-                    
+                    jumpTimer =0;
                     if((this.getX() + pizzaboyimage.getWidth()) < platform.getX())
                     {
                         this.falling = true;
@@ -188,4 +212,5 @@ public class PizzaBoy extends Actor
         }
        
     }
+  
 }

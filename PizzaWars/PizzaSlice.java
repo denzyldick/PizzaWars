@@ -12,7 +12,7 @@ public class PizzaSlice extends Actor
     private int SPEED = 3;
     private String direction;
     private GreenfootImage image;
-    
+    private PizzaBoy enemy;
     public void act() 
     {
         if(direction.equals("right"))
@@ -23,7 +23,8 @@ public class PizzaSlice extends Actor
         this.setLocation((this.getX() - this.SPEED),this.getY());
     }
     touchedBorder();
- 
+    gotHim();
+    rotate();
     }    
     public PizzaSlice(PizzaBoy owner,String direction)
     {
@@ -46,5 +47,31 @@ public class PizzaSlice extends Actor
     public PizzaBoy getOwner()
     {
         return this.owner;
+    }
+    
+    private void gotHim()
+    {try{
+        PizzaBoy enemy = (PizzaBoy)this.getOneIntersectingObject(PizzaBoy.class);
+        if(enemy != this.owner)
+        {
+         enemy.setLocation(360,40);
+         getWorld().removeObject(this);
+        /**
+         * GOT HIM
+         */    
+        }
+    }catch(Exception e)
+    {
+        
+    }
+        
+    }
+    private void rotate()
+    {       if(getRotation() >359)
+       {
+           setRotation(0);
+        }
+        setRotation((getRotation() + SPEED));
+
     }
 }

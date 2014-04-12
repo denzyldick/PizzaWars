@@ -24,7 +24,7 @@ public class PlayArea extends World
         super(600, 400, 1);
         generatePlatforms();
         addObject(new PizzaBoy(true,"a","d","w","s"), 100,40);
-        addObject(new PizzaBoy(false,"left","right","up","down"), 100,40);
+        addObject(new PizzaBoy(false,"left","right","up","down"), 360,40);
     }
    
     private void generatePlatforms()
@@ -32,7 +32,15 @@ public class PlayArea extends World
         
       addObject(new Platform(),100,FIRST_ROW);
       addObject(new Platform(),360,SECOND_ROW);
-      addObject(new Platform(),220,THIRD_ROW);
-  
+      int i=0;
+      int pos =  0;
+      while( i < 7)
+      {
+       
+      addObject(new Platform(),pos,THIRD_ROW);
+      pos += 97;
+      i++;
+    }
+      
     }
 }
