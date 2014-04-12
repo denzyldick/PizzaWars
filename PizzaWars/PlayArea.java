@@ -24,7 +24,7 @@ public class PlayArea extends World
         super(600, 400, 1);
         generatePlatforms();
         addObject(new PizzaBoy(true,"a","d","w","s"), 100,40);
-        addObject(new PizzaBoy(true,"left","right","up","down"), 100,40);
+        addObject(new PizzaBoy(false,"left","right","up","down"), 100,40);
     }
    
     private void generatePlatforms()

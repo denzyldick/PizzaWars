@@ -43,7 +43,14 @@ public class PizzaBoy extends Actor
             pizzaboy[7]  = new GreenfootImage("red/playerJumping.png");
         }else if(!type)
         {
-            //second character
+            pizzaboy[0]  = new GreenfootImage("green/playerIdle0.png");
+            pizzaboy[1]  = new GreenfootImage("green/playerWalking0.png");
+            pizzaboy[2]  = new GreenfootImage("green/playerWalking1.png");
+            pizzaboy[3]  = new GreenfootImage("green/playerWalking2.png");
+            pizzaboy[4]  = new GreenfootImage("green/playerWalking3.png");
+            pizzaboy[5]  = new GreenfootImage("green/playerWalking4.png");
+            pizzaboy[6]  = new GreenfootImage("green/playerWalking5.png");
+            pizzaboy[7]  = new GreenfootImage("green/playerJumping.png");
         }
         setImage(pizzaboy[0]);
      
