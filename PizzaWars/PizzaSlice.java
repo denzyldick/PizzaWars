@@ -42,4 +42,9 @@ public class PizzaSlice extends Actor
             getWorld().removeObject(this);
         }
     }
+    
+    public PizzaBoy getOwner()
+    {
+        return this.owner;
+    }
 }

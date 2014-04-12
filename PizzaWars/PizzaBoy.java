@@ -1,4 +1,5 @@
 import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
+import java.util.List;
 
 /**
  * Write a description of class PizzaBoy here.
@@ -153,9 +154,12 @@ public class PizzaBoy extends Actor
     }
     private void shootPizzaSlice()
     {
+       List<PizzaSlice> slices = this.getWorld().getObjects(PizzaSlice.class);
       
+       if( slices.size() == 0 ||slices.get(0).getOwner() != this )
+       {
         this.getWorld().addObject( new PizzaSlice(this,facing),this.getX(),this.getY());
-        Greenfoot.delay(5);
+    }
     }
     private void keyControl()
     {
