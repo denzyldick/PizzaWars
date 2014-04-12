@@ -1,6 +1,6 @@
 #BlueJ class context
-comment0.params=type
-comment0.target=PizzaBoy(boolean)
+comment0.params=type\ left\ right\ jump\ shoot
+comment0.target=PizzaBoy(boolean,\ java.lang.String,\ java.lang.String,\ java.lang.String,\ java.lang.String)
 comment1.params=
 comment1.target=void\ act()
 comment10.params=

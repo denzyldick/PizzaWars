@@ -23,7 +23,8 @@ public class PlayArea extends World
         // Create a new world with 600x400 cells with a cell size of 1x1 pixels.
         super(600, 400, 1);
         generatePlatforms();
-        addObject(new PizzaBoy(true), 100,40);
+        addObject(new PizzaBoy(true,"a","d","w","s"), 100,40);
+        addObject(new PizzaBoy(true,"left","right","up","down"), 100,40);
     }
    
     private void generatePlatforms()
