@@ -162,7 +162,7 @@ public class PizzaBoy extends Actor
         }else if(Greenfoot.isKeyDown(keys[2]))
         {
             this.jump();
-        }else if(Greenfoot.isKeyDown(key[3]))
+        }else if(Greenfoot.isKeyDown(keys[3]))
         {
             this.shootPizzaSlice();
         }else
