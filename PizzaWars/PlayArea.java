@@ -35,9 +35,9 @@ public class PlayArea extends World
       addObject(new Platform(),211,124);
       addObject(new Platform(),373,127);
       addObject(new Platform(),559,74);
-      addObject(new Platform(),515,224);
+      addObject(new Platform(true,30),515,224);
       addObject(new Platform(),312,276);   
-      addObject(new Platform(),103,337);
+      addObject(new Platform(true,10),103,337);
       /**
        * Ground
        */

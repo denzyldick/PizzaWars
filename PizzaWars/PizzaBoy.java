@@ -23,12 +23,14 @@ public class PizzaBoy extends Actor
     private GreenfootImage[] leftFacing = new GreenfootImage[8];
     private int FRAME_LIMIT = 8;
     private boolean falling   = true;
+    private boolean jumping   = false;
     private String facing  = "right";
     private String[] keys  = new String[4];
     private int animationCount = 0;
     private int jumpTimer = 0;
     private ArrayList<Heart> lives = new ArrayList<Heart>();
     private int startX, startY; 
+    
     public PizzaBoy(String color,String left,String right,String jump,String shoot, int startX, int startY)
     {
         keys[0] = left;
@@ -143,17 +145,24 @@ public class PizzaBoy extends Actor
     
     private void jump()
     {
-     
-        if(!this.falling)
-        {
-           while(jumpTimer < JUMP_LIMIT)
-           {
-         
-               this.setLocation(this.getX(),(this.getY() - 1));
-              jumpTimer++;
-           
+
+       if(!falling)
+       {
+        
+       while(jumpTimer < 20)
+       {
+         this.setLocation(this.getX(),(this.getY() -this.FALLING_SPEED));
+         jumpTimer++;
+        }   
         }
-    }
+        
+        if(jumpTimer > JUMP_LIMIT)
+        {
+         jumping = false;
+         falling = true;
+         jumpTimer = 0;
+        }
+    
     }
     
     private void animateJump()
@@ -162,7 +171,10 @@ public class PizzaBoy extends Actor
     }
     private void fall()
     {
+        if(!jumping){
+            
         this.setLocation(this.getX(),(this.getY() + this.FALLING_SPEED));
+    }
     }
     private void collisionDetection()
     {
@@ -172,13 +184,13 @@ public class PizzaBoy extends Actor
             try{
                     GreenfootImage  platformimage    =  platform.getImage();
                     GreenfootImage  rightFacingimage    = platform.getImage();
-                if((this.getY()-rightFacingimage.getHeight())< platform.getY())
+                if(this.getY()< platform.getY() && (this.getX()+rightFacingimage.getWidth()) > platform.getX())
                 {
                     setLocation(this.getX(),(platform.getY()-platformimage.getHeight()));
                     this.falling = false;
                     jumpTimer =0;
                 }
-                    if((this.getX() + rightFacingimage.getWidth()) < platform.getX())
+                    if((this.getX() + (rightFacingimage.getWidth()-20)) < platform.getX())
                     {
                         this.falling = true;
                     }
