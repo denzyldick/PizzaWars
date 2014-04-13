@@ -55,6 +55,7 @@ public class PizzaSlice extends Actor
         if(enemy != this.owner)
         {
          enemy.setLocation(360,40);
+         enemy.removeLives();
          getWorld().removeObject(this);
         /**
          * GOT HIM

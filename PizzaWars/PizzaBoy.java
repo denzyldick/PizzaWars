@@ -1,5 +1,6 @@
 import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
 import java.util.List;
+import java.util.ArrayList;
 
 /**
  * Write a description of class PizzaBoy here.
@@ -13,145 +14,151 @@ public class PizzaBoy extends Actor
      * Act - do whatever the PizzaBoy wants to do. This method is called whenever
      * the 'Act' or 'Run' button gets pressed in the environment.
      */
-   
-    World world;
+    private World world;
     private final int SPEED = 2;
     private final int FALLING_SPEED = 5;
-    private final int JUMP_LIMIT = 60;
-    private int frame = 0;
-    
-    private GreenfootImage[] pizzaboy = new GreenfootImage[8];
-
-
+    private final int JUMP_LIMIT = 100;
+    private int frame = 0;    
+    private GreenfootImage[] rightFacing = new GreenfootImage[8];
+    private GreenfootImage[] leftFacing = new GreenfootImage[8];
     private int FRAME_LIMIT = 8;
-    private boolean isFlipped = true;
     private boolean falling   = true;
     private String facing  = "right";
     private String[] keys  = new String[4];
-    private int levens = 5;
     private int animationCount = 0;
     private int jumpTimer = 0;
-    
-    public PizzaBoy(boolean type,String left,String right,String jump,String shoot)
+    private ArrayList<Heart> lives = new ArrayList<Heart>();
+    private int startX, startY; 
+    public PizzaBoy(String color,String left,String right,String jump,String shoot, int startX, int startY)
     {
         keys[0] = left;
         keys[1] = right;
         keys[2] = jump;
         keys[3] = shoot;
+        this.startX =  startX;
+        this.startY =  startY;
         world = (PlayArea)getWorld();
-       
-        if(type)
-        {
-            pizzaboy[0]  = new GreenfootImage("red/playerIdle0.png");
-            pizzaboy[1]  = new GreenfootImage("red/playerWalking0.png");
-            pizzaboy[2]  = new GreenfootImage("red/playerWalking1.png");
-            pizzaboy[3]  = new GreenfootImage("red/playerWalking2.png");
-            pizzaboy[4]  = new GreenfootImage("red/playerWalking3.png");
-            pizzaboy[5]  = new GreenfootImage("red/playerWalking4.png");
-            pizzaboy[6]  = new GreenfootImage("red/playerWalking5.png");
-            pizzaboy[7]  = new GreenfootImage("red/playerJumping.png");
-        }else if(!type)
-        {
-            pizzaboy[0]  = new GreenfootImage("green/playerIdle0.png");
-            pizzaboy[1]  = new GreenfootImage("green/playerWalking0.png");
-            pizzaboy[2]  = new GreenfootImage("green/playerWalking1.png");
-            pizzaboy[3]  = new GreenfootImage("green/playerWalking2.png");
-            pizzaboy[4]  = new GreenfootImage("green/playerWalking3.png");
-            pizzaboy[5]  = new GreenfootImage("green/playerWalking4.png");
-            pizzaboy[6]  = new GreenfootImage("green/playerWalking5.png");
-            pizzaboy[7]  = new GreenfootImage("green/playerJumping.png");
-        }
+        selectColor(color);  
+        lives.add(new Heart());
+        lives.add(new Heart());
+        lives.add(new Heart());
+    
       
-       
-        setImage(pizzaboy[0]);
-       
     }
-   
+    private void generateHeart()
+    {
+     for(Heart hearts : lives)
+        {
+       getWorld().addObject(hearts,startX += 22,startY);
+  
+      }
+    }
+    public int getLives()
+    {
+        return lives.size();
+    }
+   private void selectColor(String color)
+   {
+       rightFacing[0]  = new GreenfootImage(color +"/playerIdle0R.png");
+       rightFacing[1]  = new GreenfootImage(color +"/playerWalking0R.png");
+       rightFacing[2]  = new GreenfootImage(color +"/playerWalking1R.png");
+       rightFacing[3]  = new GreenfootImage(color +"/playerWalking2R.png");
+       rightFacing[4]  = new GreenfootImage(color +"/playerWalking3R.png");
+       rightFacing[5]  = new GreenfootImage(color +"/playerWalking4R.png");
+       rightFacing[6]  = new GreenfootImage(color +"/playerWalking5R.png");
+       rightFacing[7]  = new GreenfootImage(color +"/playerJumpingR.png");
+          
+       leftFacing[0] = new GreenfootImage(color +"/playerIdle0L.png");
+       leftFacing[1] = new GreenfootImage(color +"/playerWalking0L.png");
+       leftFacing[2] = new GreenfootImage(color +"/playerWalking1L.png");
+       leftFacing[3] = new GreenfootImage(color +"/playerWalking2L.png");
+       leftFacing[4] = new GreenfootImage(color +"/playerWalking3L.png");
+       leftFacing[5] = new GreenfootImage(color +"/playerWalking4L.png");
+       leftFacing[6] = new GreenfootImage(color +"/playerWalking0L.png");
+       leftFacing[7] = new GreenfootImage(color +"/playerJumpingL.png");
+    }
+   public void removeLives()
+   {
+       
+       Heart obj = lives.get(lives.size() -1);
+       getWorld().removeObject(obj);
+      lives.remove(lives.size() - 1);
+       
+   }
     public void act() 
     {
         this.collisionDetection();  
         this.keyControl();
         if(this.falling) this.fall();
         animationCount++;
+        generateHeart();
           
     }    
     private void moveRight()
     {
-        if(!falling)
-        {
-       this.setLocation((this.getX() + this.SPEED),this.getY());
-        }
-    if(animationCount % 4 == 0)
-    {
-    this.animateRight();
-    facing = "right";
-    }}
-    private void animateRight()
-    {
-       if(frame < this.FRAME_LIMIT)
-       {
-     
-        setImage(pizzaboy[frame]);
-        frame++;
-    }else
-    {
-        frame = 0;
-    }
-    }
- 
-    private void moveLeft()
-    {
-        if(!falling)
-        {
-        this.setLocation((this.getX() - this.SPEED),this.getY());
       
+       this.setLocation((this.getX() + this.SPEED),this.getY());
+          if((getX()+rightFacing[0].getWidth()) > getWorld().getWidth()-3)
+      {
+          setLocation(0,getY());    
+      }
         
-    }
-    if(animationCount  % 4 == 0)
-    {
-        facing =  "left";
-        this.animateLeft();
-    }}
     
-     private void animateLeft()
-    {
+    facing = "right";
+    this.animate();
+    }
+   
+    private void animate()
+    {  if(animationCount % 6 == 0)
+    {animationCount = 0;
         if(frame < this.FRAME_LIMIT)
         {
-            GreenfootImage flipped = pizzaboy[frame];
-           flipped.mirrorHorizontally();/// flip image
-       
-            
+           if(frame != 0 && frame != 6)
+           {
+               if(facing == "right")    setImage(rightFacing[frame]);
+               else if(facing == "left") setImage(leftFacing[frame]);
+              
+           }
             frame++;
-            
         }else
         {
             frame = 0;
-        }
-
-       
+        }}
     }
+    private void moveLeft()
+    {
+       
+      this.setLocation((this.getX() - this.SPEED),this.getY());
+      
+      if(getX() == 0)
+      {
+          setLocation(getWorld().getWidth(),getY());    
+      }
+        
+    
+  
+        facing =  "left";
+        this.animate();
+    }
+    
     private void jump()
-    {this.setLocation(this.getX(),(this.getY() - 1));
-                this.animateJump();
+    {
+     
         if(!this.falling)
         {
-           if(true)
+           while(jumpTimer < JUMP_LIMIT)
            {
-                this.setLocation(this.getX(),(this.getY() - 1));
-                this.animateJump();
          
-            }else
-            {
-            this.falling  = true;
+               this.setLocation(this.getX(),(this.getY() - 1));
+              jumpTimer++;
+           
         }
-             jumpTimer++;
-        }
-              
+    }
     }
     
     private void animateJump()
     {
-        setImage(pizzaboy[6]);
+        setImage(rightFacing[6]);
     }
     private void fall()
     {
@@ -164,11 +171,14 @@ public class PizzaBoy extends Actor
     
             try{
                     GreenfootImage  platformimage    =  platform.getImage();
-                    GreenfootImage  pizzaboyimage    = platform.getImage();
+                    GreenfootImage  rightFacingimage    = platform.getImage();
+                if((this.getY()-rightFacingimage.getHeight())< platform.getY())
+                {
                     setLocation(this.getX(),(platform.getY()-platformimage.getHeight()));
                     this.falling = false;
                     jumpTimer =0;
-                    if((this.getX() + pizzaboyimage.getWidth()) < platform.getX())
+                }
+                    if((this.getX() + rightFacingimage.getWidth()) < platform.getX())
                     {
                         this.falling = true;
                     }
@@ -187,7 +197,7 @@ public class PizzaBoy extends Actor
     }
     private void keyControl()
     {
-        // Move right
+       
         if(Greenfoot.isKeyDown(keys[1]))
         {
             this.moveRight();
@@ -203,11 +213,19 @@ public class PizzaBoy extends Actor
         }else
         {
             if(this.falling)
+            {if(facing == "right") {
+                setImage(rightFacing[6]);
+            }else
             {
-                setImage(pizzaboy[6]);
+                setImage(leftFacing[6]);
+            }
             }else{
-                
-                setImage(pizzaboy[0]);   
+              if(facing == "right") {
+                setImage(rightFacing[0]);
+            }else
+            {
+                setImage(leftFacing[0]);
+            }
             }
         }
        

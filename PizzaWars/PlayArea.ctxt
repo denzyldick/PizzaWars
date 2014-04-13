@@ -3,4 +3,6 @@ comment0.params=
 comment0.target=PlayArea()
 comment1.params=
 comment1.target=void\ generatePlatforms()
-numComments=2
+comment2.params=
+comment2.target=void\ act()
+numComments=3
