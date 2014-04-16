@@ -1,5 +1,5 @@
 #Greenfoot properties
-#Sun Apr 13 22:14:08 CEST 2014
+#Mon Apr 14 23:42:32 CEST 2014
 target2.width=100
 target8.name=LostScreen
 target5.naviview.expanded=true
@@ -150,17 +150,17 @@ class.PlayArea.superclass=greenfoot.World
 dependency13.from=PlayArea
 dependency9.type=UsesDependency
 target3.editor.height=700
-target7.naviview.expanded=true
 target6.width=90
+target7.naviview.expanded=true
 target7.width=110
 target6.editor.height=699
-dependency3.from=Menu
 target9.editor.height=700
+dependency3.from=Menu
 class.PizzaSlice.image=pizzaSlice.png
 target3.width=80
 target4.width=80
-target1.editor.y=131
 dependency7.from=PlayArea
+target1.editor.y=131
 target1.editor.x=363
 target5.width=90
 dependency4.to=PlayArea

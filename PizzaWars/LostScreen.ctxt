@@ -1,5 +1,5 @@
 #BlueJ class context
-comment0.params=
-comment0.target=LostScreen()
+comment0.params=loser
+comment0.target=LostScreen(java.lang.String)
 comment0.text=\n\ Constructor\ for\ objects\ of\ class\ LostScreen.\n\ \n
 numComments=1

@@ -17,7 +17,7 @@ public class PizzaBoy extends Actor
     private World world;
     private final int SPEED = 2;
     private final int FALLING_SPEED = 5;
-    private final int JUMP_LIMIT = 100;
+    private final int JUMP_LIMIT = 10;
     private int frame = 0;    
     private GreenfootImage[] rightFacing = new GreenfootImage[8];
     private GreenfootImage[] leftFacing = new GreenfootImage[8];
@@ -92,6 +92,7 @@ public class PizzaBoy extends Actor
         this.collisionDetection();  
         this.keyControl();
         if(this.falling) this.fall();
+        if(this.jumping ) this.jump();
         animationCount++;
         generateHeart();
           
@@ -146,17 +147,14 @@ public class PizzaBoy extends Actor
     private void jump()
     {
 
-       if(!falling)
-       {
+    
         
-       while(jumpTimer < 20)
-       {
          this.setLocation(this.getX(),(this.getY() -this.FALLING_SPEED));
-         jumpTimer++;
-        }   
-        }
         
-        if(jumpTimer > JUMP_LIMIT)
+           jumpTimer++;
+      
+        
+     if(jumpTimer > JUMP_LIMIT)
         {
          jumping = false;
          falling = true;
@@ -184,7 +182,7 @@ public class PizzaBoy extends Actor
             try{
                     GreenfootImage  platformimage    =  platform.getImage();
                     GreenfootImage  rightFacingimage    = platform.getImage();
-                if(this.getY()< platform.getY() && (this.getX()+rightFacingimage.getWidth()) > platform.getX())
+                if(this.getY()< platform.getY() && (this.getX()+rightFacingimage.getWidth()) > platform.getX() && this.getY() != 13 )
                 {
                     setLocation(this.getX(),(platform.getY()-platformimage.getHeight()));
                     this.falling = false;
@@ -217,8 +215,11 @@ public class PizzaBoy extends Actor
         {
             this.moveLeft();
         }else if(Greenfoot.isKeyDown(keys[2]))
-        {
-            this.jump();
+        {   if(!falling)
+            {
+            falling = false;
+           jumping = true;
+        }
         }else if(Greenfoot.isKeyDown(keys[3]))
         {
             this.shootPizzaSlice();

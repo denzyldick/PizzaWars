@@ -16,30 +16,27 @@ public class Platform extends Actor
     private int distance = 0;
     private final int SPEED = 2;
     private boolean moving;
+
     
     public void act() 
     {
         if(moving)
-        {distance++;
-            if(distance < DISTANCE_MAX)
-            {
+        {
+          
                 up();
-                
-            }else{
-                
-            down();
-            if(distance > (2 * DISTANCE_MAX))
-            {
-            distance = 0;
-        }
-        }
-            
+              if(getY() == 0)
+              {
+              setLocation(this.getX(), getWorld().getHeight());    
+              }
+                             
         }
     }    
     public Platform(boolean moving, int distance)
     {
         this.moving = moving;
         this.distance = distance;
+        setImage("platformDark.png");//set another platform image
+
     }
     public Platform()
     {

@@ -59,11 +59,11 @@ public class PlayArea extends World
         
         if(redBoy.getLives() == 0)
         {
-            Greenfoot.setWorld(new LostScreen());
+            Greenfoot.setWorld(new LostScreen("red"));
 
         }else if(greenBoy.getLives() == 0)
         {
-           Greenfoot.setWorld(new LostScreen());   
+           Greenfoot.setWorld(new LostScreen("green"));   
         }
     }
 }
