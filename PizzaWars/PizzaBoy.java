@@ -30,6 +30,8 @@ public class PizzaBoy extends Actor
     private int jumpTimer = 0;
     private ArrayList<Heart> lives = new ArrayList<Heart>();
     private int startX, startY; 
+    private GreenfootSound throwSound = new GreenfootSound("throw.mp3");
+    private GreenfootSound hitSound   = new GreenfootSound("hit.mp3");
     
     public PizzaBoy(String color,String left,String right,String jump,String shoot, int startX, int startY)
     {
@@ -43,8 +45,7 @@ public class PizzaBoy extends Actor
         selectColor(color);  
         lives.add(new Heart());
         lives.add(new Heart());
-        lives.add(new Heart());
-    
+        lives.add(new Heart());  
       
     }
     private void generateHeart()
@@ -55,10 +56,16 @@ public class PizzaBoy extends Actor
   
       }
     }
+    /**
+     * Get lives 
+     */
     public int getLives()
     {
         return lives.size();
     }
+    /**
+     * SELECT the corresponding color 
+     */
    private void selectColor(String color)
    {
        rightFacing[0]  = new GreenfootImage(color +"/playerIdle0R.png");
@@ -79,12 +86,16 @@ public class PizzaBoy extends Actor
        leftFacing[6] = new GreenfootImage(color +"/playerWalking0L.png");
        leftFacing[7] = new GreenfootImage(color +"/playerJumpingL.png");
     }
+    /**
+     * Decrease lives when needed
+     */
    public void removeLives()
    {
-       
-       Heart obj = lives.get(lives.size() -1);
-       getWorld().removeObject(obj);
+       hitSound.play();
+      Heart obj = lives.get(lives.size() -1);
+      getWorld().removeObject(obj);
       lives.remove(lives.size() - 1);
+  
        
    }
     public void act() 
@@ -96,7 +107,10 @@ public class PizzaBoy extends Actor
         animationCount++;
         generateHeart();
           
-    }    
+    }   
+    /**
+     * Move right
+     */
     private void moveRight()
     {
       
@@ -110,7 +124,9 @@ public class PizzaBoy extends Actor
     facing = "right";
     this.animate();
     }
-   
+   /**
+    * Animate left & right
+    */
     private void animate()
     {  if(animationCount % 6 == 0)
     {animationCount = 0;
@@ -128,6 +144,9 @@ public class PizzaBoy extends Actor
             frame = 0;
         }}
     }
+    /**
+     * Move left
+     */
     private void moveLeft()
     {
        
@@ -143,17 +162,14 @@ public class PizzaBoy extends Actor
         facing =  "left";
         this.animate();
     }
-    
+    /**
+     * Jump
+     */
     private void jump()
     {
-
-    
-        
-         this.setLocation(this.getX(),(this.getY() -this.FALLING_SPEED));
-        
-           jumpTimer++;
-      
-        
+        this.setLocation(this.getX(),(this.getY() -this.FALLING_SPEED));
+        jumpTimer++;
+             
      if(jumpTimer > JUMP_LIMIT)
         {
          jumping = false;
@@ -162,10 +178,12 @@ public class PizzaBoy extends Actor
         }
     
     }
-    
+    /**
+     * Animate the jumping process
+     */    
     private void animateJump()
     {
-        setImage(rightFacing[6]);
+        setImage(rightFacing[7]);
     }
     private void fall()
     {
@@ -202,6 +220,7 @@ public class PizzaBoy extends Actor
       
        if( slices.size() == 0 ||slices.get(0).getOwner() != this )
        {
+           throwSound.play();
         this.getWorld().addObject( new PizzaSlice(this,facing),this.getX(),this.getY());
     }
     }
@@ -219,7 +238,7 @@ public class PizzaBoy extends Actor
             {
             falling = false;
            jumping = true;
-        }
+                }
         }else if(Greenfoot.isKeyDown(keys[3]))
         {
             this.shootPizzaSlice();

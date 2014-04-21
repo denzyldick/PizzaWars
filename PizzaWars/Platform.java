@@ -21,8 +21,7 @@ public class Platform extends Actor
     public void act() 
     {
         if(moving)
-        {
-          
+        {      
                 up();
               if(getY() == 0)
               {

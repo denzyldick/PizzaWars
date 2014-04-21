@@ -17,6 +17,7 @@ public class PlayArea extends World
     final int GROUND   = 500;
     PizzaBoy redBoy = new PizzaBoy("red","a","d","w","s",8,12);
     PizzaBoy greenBoy = new PizzaBoy("green","left","right","up","down",this.getWidth()-90,12);
+    GreenfootSound musicLoop = new GreenfootSound("music.mp3");
     
     
     public PlayArea()
@@ -26,7 +27,11 @@ public class PlayArea extends World
         generatePlatforms();
         addObject(redBoy, 100,40);
         addObject(greenBoy, 360,40);
+     
+        musicLoop.setVolume(20);
     }
+    
+    
    
     private void generatePlatforms()
     {
@@ -56,7 +61,7 @@ public class PlayArea extends World
     
     public void act()
     {
-        
+         musicLoop.playLoop();
         if(redBoy.getLives() == 0)
         {
             Greenfoot.setWorld(new LostScreen("red"));

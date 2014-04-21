@@ -13,15 +13,17 @@ public class Menu extends World
      * 
      */
     private Logo logo   =   new Logo();
-    private StartButton startButton = new StartButton();
-    private PlayArea playArea   = new PlayArea();
-    
+    private Start startButton = new Start();
+    private Instruction instructionButton = new Instruction();
+ 
     public Menu()
     {    
         // Create a new world with 600x400 cells with a cell size of 1x1 pixels.
         super(600, 400, 1); 
-        addObject(logo,300,100);
-        addObject(startButton,300,200);
+        addObject(logo,900,100);
+        addObject(startButton,0,200);
+        addObject(instructionButton,900,300);
+     
     
      }
 }

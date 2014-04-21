@@ -13,6 +13,7 @@ public class PizzaSlice extends Actor
     private String direction;
     private GreenfootImage image;
     private PizzaBoy enemy;
+    
     public void act() 
     {
         if(direction.equals("right"))
@@ -54,6 +55,7 @@ public class PizzaSlice extends Actor
         PizzaBoy enemy = (PizzaBoy)this.getOneIntersectingObject(PizzaBoy.class);
         if(enemy != this.owner)
         {
+        
          enemy.setLocation(360,40);
          enemy.removeLives();
          getWorld().removeObject(this);
