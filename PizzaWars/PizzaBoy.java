@@ -1,266 +1,249 @@
-import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
+import greenfoot.*;
 import java.util.List;
 import java.util.ArrayList;
 
-/**
- * Write a description of class PizzaBoy here.
- * 
- * @author (your name) 
- * @version (a version number or a date)
- */
 public class PizzaBoy extends Actor
 {
-    /**
-     * Act - do whatever the PizzaBoy wants to do. This method is called whenever
-     * the 'Act' or 'Run' button gets pressed in the environment.
-     */
-    private World world;
-    private final int SPEED = 2;
-    private final int FALLING_SPEED = 5;
-    private final int JUMP_LIMIT = 10;
-    private int frame = 0;    
-    private GreenfootImage[] rightFacing = new GreenfootImage[8];
-    private GreenfootImage[] leftFacing = new GreenfootImage[8];
-    private int FRAME_LIMIT = 8;
-    private boolean falling   = true;
-    private boolean jumping   = false;
-    private String facing  = "right";
-    private String[] keys  = new String[4];
-    private int animationCount = 0;
-    private int jumpTimer = 0;
-    private ArrayList<Heart> lives = new ArrayList<Heart>();
-    private int startX, startY; 
-    private GreenfootSound throwSound = new GreenfootSound("throw.mp3");
-    private GreenfootSound hitSound   = new GreenfootSound("hit.mp3");
-    
-    public PizzaBoy(String color,String left,String right,String jump,String shoot, int startX, int startY)
+    private static final int SPEED = 2;
+    private static final int FALLING_SPEED = 5;
+    private static final int JUMP_LIMIT = 10;
+    private static final int FRAMES = 8;
+    private static final int FRAME_SKIP_INTERVAL = 6;
+    private static final int HEART_SPACING = 22;
+    private static final int INITIAL_LIVES = 3;
+    private static final int SCREEN_EDGE_BUFFER = 3;
+    private static final int COLLISION_HITBOX_INSET = 20;
+
+    private int frame;
+    private int animationCount;
+    private int jumpTimer;
+    private final int spawnX;
+    private final int spawnY;
+    private boolean falling;
+    private boolean jumping;
+    private String facing;
+
+    private GreenfootImage[] rightFacing;
+    private GreenfootImage[] leftFacing;
+    private final String[] keys;
+    private final List<Heart> lives;
+    private final GreenfootSound throwSound;
+    private final GreenfootSound hitSound;
+
+    public PizzaBoy(String color, String left, String right, String jump, String shoot, int spawnX, int spawnY)
     {
-        keys[0] = left;
-        keys[1] = right;
-        keys[2] = jump;
-        keys[3] = shoot;
-        this.startX =  startX;
-        this.startY =  startY;
-        world = (PlayArea)getWorld();
-        selectColor(color);  
-        lives.add(new Heart());
-        lives.add(new Heart());
-        lives.add(new Heart());  
-      
-    }
-    private void generateHeart()
-    {
-     for(Heart hearts : lives)
+        this.spawnX = spawnX;
+        this.spawnY = spawnY;
+        this.keys = new String[]{left, right, jump, shoot};
+        facing = "right";
+        falling = true;
+
+        rightFacing = new GreenfootImage[FRAMES];
+        leftFacing = new GreenfootImage[FRAMES];
+        lives = new ArrayList<>(INITIAL_LIVES);
+        throwSound = new GreenfootSound("throw.mp3");
+        hitSound = new GreenfootSound("hit.mp3");
+
+        loadAnimationFrames(color);
+        for (int i = 0; i < INITIAL_LIVES; i++)
         {
-       getWorld().addObject(hearts,startX += 22,startY);
-  
-      }
+            lives.add(new Heart());
+        }
     }
-    /**
-     * Get lives 
-     */
+
+    @Override
+    public void addedToWorld(World world)
+    {
+        int x = spawnX;
+        for (Heart heart : lives)
+        {
+            world.addObject(heart, x, spawnY);
+            x += HEART_SPACING;
+        }
+    }
+
+    private void loadAnimationFrames(String color)
+    {
+        rightFacing[0] = new GreenfootImage(color + "/playerIdle0R.png");
+        rightFacing[1] = new GreenfootImage(color + "/playerWalking0R.png");
+        rightFacing[2] = new GreenfootImage(color + "/playerWalking1R.png");
+        rightFacing[3] = new GreenfootImage(color + "/playerWalking2R.png");
+        rightFacing[4] = new GreenfootImage(color + "/playerWalking3R.png");
+        rightFacing[5] = new GreenfootImage(color + "/playerWalking4R.png");
+        rightFacing[6] = new GreenfootImage(color + "/playerWalking5R.png");
+        rightFacing[7] = new GreenfootImage(color + "/playerJumpingR.png");
+
+        leftFacing[0] = new GreenfootImage(color + "/playerIdle0L.png");
+        leftFacing[1] = new GreenfootImage(color + "/playerWalking0L.png");
+        leftFacing[2] = new GreenfootImage(color + "/playerWalking1L.png");
+        leftFacing[3] = new GreenfootImage(color + "/playerWalking2L.png");
+        leftFacing[4] = new GreenfootImage(color + "/playerWalking3L.png");
+        leftFacing[5] = new GreenfootImage(color + "/playerWalking4L.png");
+        leftFacing[6] = new GreenfootImage(color + "/playerWalking5L.png");
+        leftFacing[7] = new GreenfootImage(color + "/playerJumpingL.png");
+    }
+
     public int getLives()
     {
         return lives.size();
     }
-    /**
-     * SELECT the corresponding color 
-     */
-   private void selectColor(String color)
-   {
-       rightFacing[0]  = new GreenfootImage(color +"/playerIdle0R.png");
-       rightFacing[1]  = new GreenfootImage(color +"/playerWalking0R.png");
-       rightFacing[2]  = new GreenfootImage(color +"/playerWalking1R.png");
-       rightFacing[3]  = new GreenfootImage(color +"/playerWalking2R.png");
-       rightFacing[4]  = new GreenfootImage(color +"/playerWalking3R.png");
-       rightFacing[5]  = new GreenfootImage(color +"/playerWalking4R.png");
-       rightFacing[6]  = new GreenfootImage(color +"/playerWalking5R.png");
-       rightFacing[7]  = new GreenfootImage(color +"/playerJumpingR.png");
-          
-       leftFacing[0] = new GreenfootImage(color +"/playerIdle0L.png");
-       leftFacing[1] = new GreenfootImage(color +"/playerWalking0L.png");
-       leftFacing[2] = new GreenfootImage(color +"/playerWalking1L.png");
-       leftFacing[3] = new GreenfootImage(color +"/playerWalking2L.png");
-       leftFacing[4] = new GreenfootImage(color +"/playerWalking3L.png");
-       leftFacing[5] = new GreenfootImage(color +"/playerWalking4L.png");
-       leftFacing[6] = new GreenfootImage(color +"/playerWalking0L.png");
-       leftFacing[7] = new GreenfootImage(color +"/playerJumpingL.png");
-    }
-    /**
-     * Decrease lives when needed
-     */
-   public void removeLives()
-   {
-       hitSound.play();
-      Heart obj = lives.get(lives.size() -1);
-      getWorld().removeObject(obj);
-      lives.remove(lives.size() - 1);
-  
-       
-   }
-    public void act() 
+
+    public void removeLives()
     {
-        this.collisionDetection();  
-        this.keyControl();
-        if(this.falling) this.fall();
-        if(this.jumping ) this.jump();
+        if (lives.isEmpty())
+        {
+            return;
+        }
+        hitSound.play();
+        Heart heart = lives.remove(lives.size() - 1);
+        getWorld().removeObject(heart);
+    }
+
+    @Override
+    public void act()
+    {
+        collisionDetection();
+        handleInput();
+        if (falling)
+        {
+            fall();
+        }
+        if (jumping)
+        {
+            jump();
+        }
         animationCount++;
-        generateHeart();
-          
-    }   
-    /**
-     * Move right
-     */
+    }
+
     private void moveRight()
     {
-      
-       this.setLocation((this.getX() + this.SPEED),this.getY());
-          if((getX()+rightFacing[0].getWidth()) > getWorld().getWidth()-3)
-      {
-          setLocation(0,getY());    
-      }
-        
-    
-    facing = "right";
-    this.animate();
-    }
-   /**
-    * Animate left & right
-    */
-    private void animate()
-    {  if(animationCount % 6 == 0)
-    {animationCount = 0;
-        if(frame < this.FRAME_LIMIT)
+        setLocation(getX() + SPEED, getY());
+        if (getX() + rightFacing[0].getWidth() > getWorld().getWidth() - SCREEN_EDGE_BUFFER)
         {
-           if(frame != 0 && frame != 6)
-           {
-               if(facing == "right")    setImage(rightFacing[frame]);
-               else if(facing == "left") setImage(leftFacing[frame]);
-              
-           }
-            frame++;
-        }else
-        {
-            frame = 0;
-        }}
+            setLocation(0, getY());
+        }
+        facing = "right";
+        advanceAnimation();
     }
-    /**
-     * Move left
-     */
+
     private void moveLeft()
     {
-       
-      this.setLocation((this.getX() - this.SPEED),this.getY());
-      
-      if(getX() == 0)
-      {
-          setLocation(getWorld().getWidth(),getY());    
-      }
-        
-    
-  
-        facing =  "left";
-        this.animate();
+        setLocation(getX() - SPEED, getY());
+        if (getX() <= 0)
+        {
+            setLocation(getWorld().getWidth(), getY());
+        }
+        facing = "left";
+        advanceAnimation();
     }
-    /**
-     * Jump
-     */
+
+    private void advanceAnimation()
+    {
+        if (animationCount % FRAME_SKIP_INTERVAL != 0)
+        {
+            return;
+        }
+        animationCount = 0;
+        frame = (frame + 1) % FRAMES;
+        if (frame == 0 || frame == FRAMES - 2)
+        {
+            return;
+        }
+        setImage(facing.equals("right") ? rightFacing[frame] : leftFacing[frame]);
+    }
+
     private void jump()
     {
-        this.setLocation(this.getX(),(this.getY() -this.FALLING_SPEED));
+        setLocation(getX(), getY() - FALLING_SPEED);
         jumpTimer++;
-             
-     if(jumpTimer > JUMP_LIMIT)
+        if (jumpTimer > JUMP_LIMIT)
         {
-         jumping = false;
-         falling = true;
-         jumpTimer = 0;
+            jumping = false;
+            falling = true;
+            jumpTimer = 0;
         }
-    
     }
-    /**
-     * Animate the jumping process
-     */    
-    private void animateJump()
-    {
-        setImage(rightFacing[7]);
-    }
+
     private void fall()
     {
-        if(!jumping){
-            
-        this.setLocation(this.getX(),(this.getY() + this.FALLING_SPEED));
+        if (!jumping)
+        {
+            setLocation(getX(), getY() + FALLING_SPEED);
+        }
     }
-    }
+
     private void collisionDetection()
     {
-    
-        Platform  platform  =  (Platform)getOneIntersectingObject(Platform.class);
-    
-            try{
-                    GreenfootImage  platformimage    =  platform.getImage();
-                    GreenfootImage  rightFacingimage    = platform.getImage();
-                if(this.getY()< platform.getY() && (this.getX()+rightFacingimage.getWidth()) > platform.getX() && this.getY() != 13 )
-                {
-                    setLocation(this.getX(),(platform.getY()-platformimage.getHeight()));
-                    this.falling = false;
-                    jumpTimer =0;
-                }
-                    if((this.getX() + (rightFacingimage.getWidth()-20)) < platform.getX())
-                    {
-                        this.falling = true;
-                    }
-    }catch(Exception e){
-        this.falling = true;
-    }
-    }
-    private void shootPizzaSlice()
-    {
-       List<PizzaSlice> slices = this.getWorld().getObjects(PizzaSlice.class);
-      
-       if( slices.size() == 0 ||slices.get(0).getOwner() != this )
-       {
-           throwSound.play();
-        this.getWorld().addObject( new PizzaSlice(this,facing),this.getX(),this.getY());
-    }
-    }
-    private void keyControl()
-    {
-       
-        if(Greenfoot.isKeyDown(keys[1]))
+        Platform platform = (Platform) getOneIntersectingObject(Platform.class);
+        if (platform == null)
         {
-            this.moveRight();
-        }else if(Greenfoot.isKeyDown(keys[0]))
+            falling = true;
+            return;
+        }
+
+        GreenfootImage platformImage = platform.getImage();
+        boolean standingOnPlatform = getY() < platform.getY()
+            && getX() + platformImage.getWidth() > platform.getX()
+            && getY() != platform.getY() - platformImage.getHeight() / 2;
+
+        if (standingOnPlatform)
         {
-            this.moveLeft();
-        }else if(Greenfoot.isKeyDown(keys[2]))
-        {   if(!falling)
-            {
+            setLocation(getX(), platform.getY() - platformImage.getHeight());
             falling = false;
-           jumping = true;
-                }
-        }else if(Greenfoot.isKeyDown(keys[3]))
+            jumpTimer = 0;
+        }
+
+        if (getX() + (rightFacing[0].getWidth() - COLLISION_HITBOX_INSET) < platform.getX())
         {
-            this.shootPizzaSlice();
-        }else
+            falling = true;
+        }
+    }
+
+    private void shoot()
+    {
+        List<PizzaSlice> slices = getWorld().getObjects(PizzaSlice.class);
+        if (slices.isEmpty() || slices.get(0).getOwner() != this)
         {
-            if(this.falling)
-            {if(facing == "right") {
-                setImage(rightFacing[6]);
-            }else
+            throwSound.play();
+            getWorld().addObject(new PizzaSlice(this, facing), getX(), getY());
+        }
+    }
+
+    private void handleInput()
+    {
+        if (Greenfoot.isKeyDown(keys[1]))
+        {
+            moveRight();
+        }
+        else if (Greenfoot.isKeyDown(keys[0]))
+        {
+            moveLeft();
+        }
+        else if (Greenfoot.isKeyDown(keys[2]))
+        {
+            if (!falling)
             {
-                setImage(leftFacing[6]);
-            }
-            }else{
-              if(facing == "right") {
-                setImage(rightFacing[0]);
-            }else
-            {
-                setImage(leftFacing[0]);
-            }
+                falling = false;
+                jumping = true;
             }
         }
-       
+        else if (Greenfoot.isKeyDown(keys[3]))
+        {
+            shoot();
+        }
+        else
+        {
+            setImage(facing.equals("right") ? rightFacing[0] : leftFacing[0]);
+        }
     }
-  
+
+    public int getSpawnX()
+    {
+        return spawnX;
+    }
+
+    public int getSpawnY()
+    {
+        return spawnY;
+    }
 }

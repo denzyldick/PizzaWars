@@ -1,28 +1,34 @@
-import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
+import greenfoot.*;
 
-/**
- * Write a description of class LostScreen here.
- * 
- * @author (your name) 
- * @version (a version number or a date)
- */
 public class LostScreen extends World
 {
+    private static final int WIDTH = 600;
+    private static final int HEIGHT = 400;
+    private static final int RESTART_DELAY = 30;
 
-    /**
-     * Constructor for objects of class LostScreen.
-     * 
-     */
+    private int timer;
+
     public LostScreen(String loser)
-    {    
-        // Create a new world with 600x400 cells with a cell size of 1x1 pixels.
-        super(600, 400, 1); 
-        if(loser.equals("red"))
+    {
+        super(WIDTH, HEIGHT, 1);
+        if (loser.equals("red"))
         {
             setBackground("greenwins.png");
-        }else if(loser.equals("green"))
+        }
+        else
         {
             setBackground("redwins.png");
+        }
+        showText("Click or press SPACE to return to menu", WIDTH / 2, HEIGHT - 20);
+    }
+
+    @Override
+    public void act()
+    {
+        timer++;
+        if (timer > RESTART_DELAY && (Greenfoot.mouseClicked(null) || Greenfoot.isKeyDown("space")))
+        {
+            Greenfoot.setWorld(new Menu());
         }
     }
 }

@@ -1,25 +1,24 @@
-import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
+import greenfoot.*;
 
 public abstract class MenuItem extends Actor
 {
-    protected final int SPEED = 5;
-    protected boolean  left;
+    private static final int SPEED = 5;
+    private static final int CENTER_X = 300;
 
+    protected boolean left;
+
+    @Override
     public abstract void act();
+
     protected void move()
     {
-        if(left)
+        if (left && getX() > CENTER_X)
         {
-        if(this.getX()>300)
+            setLocation(getX() - SPEED, getY());
+        }
+        else if (!left && getX() < CENTER_X)
         {
-        setLocation((this.getX() - SPEED),this.getY());
-    }}else if(!left)
-    {
-        if(this.getX()<300)
-        {
-         setLocation((this.getX() + SPEED),this.getY());
+            setLocation(getX() + SPEED, getY());
         }
     }
-    }
-        
 }

@@ -1,80 +1,69 @@
-import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
+import greenfoot.*;
 
-/**
- * Write a description of class PizzaSlice here.
- * 
- * @author (your name) 
- * @version (a version number or a date)
- */
 public class PizzaSlice extends Actor
 {
-    public PizzaBoy owner;
-    private int SPEED = 3;
-    private String direction;
-    private GreenfootImage image;
-    private PizzaBoy enemy;
-    
-    public void act() 
-    {
-        if(direction.equals("right"))
-        {
-        this.setLocation((this.getX() + this.SPEED), this.getY());
-    }else if(direction.equals("left"))
-    {
-        this.setLocation((this.getX() - this.SPEED),this.getY());
-    }
-    touchedBorder();
-    gotHim();
-    rotate();
-    }    
-    public PizzaSlice(PizzaBoy owner,String direction)
+    private static final int SPEED = 3;
+    private static final int FULL_ROTATION = 360;
+
+    private final PizzaBoy owner;
+    private final String direction;
+
+    public PizzaSlice(PizzaBoy owner, String direction)
     {
         this.owner = owner;
         this.direction = direction;
-        image = this.getImage();
     }
-    
-    private void touchedBorder()
-    {
-        if((this.getX() - this.image.getWidth()) < 0)
-        {
-            getWorld().removeObject(this);
-        }else if(this.getX()+ image.getWidth() > (getWorld().getWidth()))
-        {
-            getWorld().removeObject(this);
-        }
-    }
-    
+
     public PizzaBoy getOwner()
     {
-        return this.owner;
+        return owner;
     }
-    
-    private void gotHim()
-    {try{
-        PizzaBoy enemy = (PizzaBoy)this.getOneIntersectingObject(PizzaBoy.class);
-        if(enemy != this.owner)
-        {
-        
-         enemy.setLocation(360,40);
-         enemy.removeLives();
-         getWorld().removeObject(this);
-        /**
-         * GOT HIM
-         */    
-        }
-    }catch(Exception e)
-    {
-        
-    }
-        
-    }
-    private void rotate()
-    {       if(getRotation() >359)
-       {
-           setRotation(0);
-        }
-        setRotation((getRotation() + SPEED));
 
+    @Override
+    public void act()
+    {
+        if (direction.equals("right"))
+        {
+            setLocation(getX() + SPEED, getY());
+        }
+        else
+        {
+            setLocation(getX() - SPEED, getY());
+        }
+        removeIfOffScreen();
+        checkHit();
+        rotate();
+    }
+
+    private void removeIfOffScreen()
+    {
+        GreenfootImage img = getImage();
+        if (getX() - img.getWidth() < 0 || getX() + img.getWidth() > getWorld().getWidth())
+        {
+            getWorld().removeObject(this);
+        }
+    }
+
+    private void checkHit()
+    {
+        PizzaBoy enemy = (PizzaBoy) getOneIntersectingObject(PizzaBoy.class);
+        if (enemy == null || enemy == owner)
+        {
+            return;
+        }
+
+        enemy.setLocation(owner.getSpawnX(), owner.getSpawnY());
+        enemy.removeLives();
+        getWorld().removeObject(this);
+    }
+
+    private void rotate()
+    {
+        int rotation = getRotation() + SPEED;
+        if (rotation >= FULL_ROTATION)
+        {
+            rotation -= FULL_ROTATION;
+        }
+        setRotation(rotation);
     }
 }

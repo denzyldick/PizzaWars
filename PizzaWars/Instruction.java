@@ -1,34 +1,30 @@
-import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
+import greenfoot.*;
 
-/**
- * Write a description of class Instruction here.
- * 
- * @author (your name) 
- * @version (a version number or a date)
- */
 public class Instruction extends MenuItem
 {
-    private GreenfootImage instruction = new GreenfootImage("InstructionsButton.png");
-    private GreenfootImage image = new GreenfootImage("instructionscreen.png");
-    private boolean showInstruction = true;
-    public void act() 
+    private final GreenfootImage buttonImage;
+    private final GreenfootImage instructionImage;
+    private boolean showingInstruction;
+
+    public Instruction()
+    {
+        buttonImage = new GreenfootImage("InstructionsButton.png");
+        instructionImage = new GreenfootImage("instructionscreen.png");
+        showingInstruction = false;
+    }
+
+    @Override
+    public void act()
     {
         left = true;
-        move();
-       if(Greenfoot.mouseClicked(this))
+        if (!showingInstruction)
         {
-            if(showInstruction)
-            {
-                showInstruction = false;
-               setImage(image);
-            }else
-            {
-                showInstruction = true;
-                setImage(instruction);
-            }
+            move();
         }
-       
-    }  
-    
- 
+        if (Greenfoot.mouseClicked(this))
+        {
+            showingInstruction = !showingInstruction;
+            setImage(showingInstruction ? instructionImage : buttonImage);
+        }
+    }
 }

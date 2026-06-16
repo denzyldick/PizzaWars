@@ -1,29 +1,15 @@
-import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
-/**
- * Write a description of class Menu here.
- * 
- * @author Denzyl Dick
- * @version 0.1
- */
+import greenfoot.*;
+
 public class Menu extends World
 {
+    private static final int WIDTH = 600;
+    private static final int HEIGHT = 400;
 
-    /**
-     * Constructor for objects of class Menu.
-     * 
-     */
-    private Logo logo   =   new Logo();
-    private Start startButton = new Start();
-    private Instruction instructionButton = new Instruction();
- 
     public Menu()
-    {    
-        // Create a new world with 600x400 cells with a cell size of 1x1 pixels.
-        super(600, 400, 1); 
-        addObject(logo,900,100);
-        addObject(startButton,0,200);
-        addObject(instructionButton,900,300);
-     
-    
-     }
+    {
+        super(WIDTH, HEIGHT, 1);
+        addObject(new Logo(), 900, 100);
+        addObject(new Start(), 0, 200);
+        addObject(new Instruction(), 900, 300);
+    }
 }
