@@ -1,0 +1,7 @@
+[package]
+name = "pizza_wars"
+version = "2.0.0"
+edition = "2024"
+
+[dependencies]
+bevy = "0.15"
