@@ -1,14 +1,14 @@
 class_name PizzaPlatform
-extends AnimatableBody2D
+extends CharacterBody2D
 
 @export var texture_path := "res://assets/images/platform.png"
 @export var moving := false
-@export var speed := 60.0
-@export var travel_distance := 40.0
-@export var direction := 1.0
+@export var speed := 100.0
+@export var travel_distance := 64.0
 
 var _start_position := Vector2.ZERO
 var _sprite: Sprite2D
+var _direction := 1.0
 
 
 func _ready() -> void:
@@ -32,7 +32,13 @@ func _physics_process(delta: float) -> void:
 	if not moving:
 		return
 
-	position.y += direction * speed * delta
-	if absf(position.y - _start_position.y) >= travel_distance:
-		direction *= -1.0
+	var motion = Vector2(0.0, _direction * speed * delta)
+	var collision = move_and_collide(motion)
 
+	if collision:
+		var body = collision.get_collider()
+		if body is PlayerController and body.has_method(&"move_and_collide"):
+			body.move_and_collide(collision.get_remainder())
+
+	if absf(position.y - _start_position.y) >= travel_distance:
+		_direction *= -1.0

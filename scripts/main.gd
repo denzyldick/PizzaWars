@@ -5,6 +5,7 @@ const GAME_SCENE := preload("res://scenes/game.tscn")
 const GAME_OVER_SCENE := preload("res://scenes/game_over.tscn")
 
 var current_scene: Node
+var _last_mode := "pvp"
 
 
 func _ready() -> void:
@@ -53,12 +54,15 @@ func show_menu() -> void:
 	current_scene.quit_requested.connect(_quit_game)
 
 
-func start_game() -> void:
+func start_game(mode: String = "pvp") -> void:
+	_last_mode = mode
 	_clear_current_scene()
-	current_scene = GAME_SCENE.instantiate()
-	add_child(current_scene)
-	current_scene.game_over.connect(show_game_over)
-	current_scene.return_to_menu.connect(show_menu)
+	var game := GAME_SCENE.instantiate()
+	game.player_mode = mode
+	add_child(game)
+	current_scene = game
+	game.game_over.connect(show_game_over)
+	game.return_to_menu.connect(show_menu)
 
 
 func show_game_over(winner_color: String) -> void:
@@ -66,10 +70,9 @@ func show_game_over(winner_color: String) -> void:
 	current_scene = GAME_OVER_SCENE.instantiate()
 	add_child(current_scene)
 	current_scene.set_winner(winner_color)
-	current_scene.restart_requested.connect(start_game)
+	current_scene.restart_requested.connect(func(): start_game(_last_mode))
 	current_scene.menu_requested.connect(show_menu)
 
 
 func _quit_game() -> void:
 	get_tree().quit()
-

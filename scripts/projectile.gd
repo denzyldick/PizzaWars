@@ -13,6 +13,7 @@ var _sprite: Sprite2D
 
 
 func _ready() -> void:
+	collision_mask = 3
 	_build_nodes()
 	body_entered.connect(_on_body_entered)
 

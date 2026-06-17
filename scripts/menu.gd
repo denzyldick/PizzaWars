@@ -1,14 +1,14 @@
 extends Control
 
-signal start_requested
+signal start_requested(mode: String)
 signal quit_requested
 
 const MENU_BG := preload("res://assets/images/MenuBackground.png")
 const LOGO := preload("res://assets/images/logo.png")
-const START_BUTTON := preload("res://assets/images/startButton.png")
 const INSTRUCTIONS_BUTTON := preload("res://assets/images/InstructionsButton.png")
+const INSTRUCTION_SCREEN := preload("res://assets/images/instructionscreen.png")
 
-var _instructions_panel: PanelContainer
+var _instructions_panel: TextureRect
 
 
 func _ready() -> void:
@@ -30,17 +30,22 @@ func _build_ui() -> void:
 	add_child(logo)
 
 	var button_column := VBoxContainer.new()
-	button_column.position = Vector2(160, 210)
-	button_column.custom_minimum_size = Vector2(280, 180)
+	button_column.position = Vector2(160, 200)
+	button_column.custom_minimum_size = Vector2(280, 200)
 	button_column.add_theme_constant_override("separation", 10)
 	add_child(button_column)
 
-	var start_button := TextureButton.new()
-	start_button.texture_normal = START_BUTTON
-	start_button.stretch_mode = TextureButton.STRETCH_SCALE
-	start_button.custom_minimum_size = Vector2(277, 89)
-	start_button.pressed.connect(_on_start_pressed)
-	button_column.add_child(start_button)
+	var p1_button := Button.new()
+	p1_button.text = "1 Player (vs AI)"
+	p1_button.custom_minimum_size = Vector2(277, 40)
+	p1_button.pressed.connect(func(): start_requested.emit("pve"))
+	button_column.add_child(p1_button)
+
+	var p2_button := Button.new()
+	p2_button.text = "2 Players"
+	p2_button.custom_minimum_size = Vector2(277, 40)
+	p2_button.pressed.connect(func(): start_requested.emit("pvp"))
+	button_column.add_child(p2_button)
 
 	var instructions_button := TextureButton.new()
 	instructions_button.texture_normal = INSTRUCTIONS_BUTTON
@@ -55,28 +60,13 @@ func _build_ui() -> void:
 	quit_button.pressed.connect(_on_quit_pressed)
 	button_column.add_child(quit_button)
 
-	_instructions_panel = PanelContainer.new()
+	_instructions_panel = TextureRect.new()
+	_instructions_panel.texture = INSTRUCTION_SCREEN
 	_instructions_panel.visible = false
-	_instructions_panel.position = Vector2(20, 20)
-	_instructions_panel.custom_minimum_size = Vector2(560, 120)
+	_instructions_panel.set_anchors_preset(Control.PRESET_FULL_RECT)
+	_instructions_panel.stretch_mode = TextureRect.STRETCH_SCALE
+	_instructions_panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(_instructions_panel)
-
-	var instructions_margin := MarginContainer.new()
-	instructions_margin.add_theme_constant_override("margin_left", 20)
-	instructions_margin.add_theme_constant_override("margin_top", 18)
-	instructions_margin.add_theme_constant_override("margin_right", 20)
-	instructions_margin.add_theme_constant_override("margin_bottom", 18)
-	_instructions_panel.add_child(instructions_margin)
-
-	var instructions_label := Label.new()
-	instructions_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	instructions_label.text = "Red: W/A/S/D. Green: Arrow keys. Jump, move, and throw pizza slices to knock out the other player."
-	instructions_label.custom_minimum_size = Vector2(520, 80)
-	instructions_margin.add_child(instructions_label)
-
-
-func _on_start_pressed() -> void:
-	start_requested.emit()
 
 
 func _on_quit_pressed() -> void:
